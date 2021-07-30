@@ -4,10 +4,11 @@ import express from 'express';
 import * as dotenv from 'dotenv';
 import cors from 'cors';
 import helmet from 'helmet';
+import ormconfig from './config/ormconfig';
 dotenv.config();
 const port = process.env.PORT;
 
-createConnection()
+createConnection(ormconfig)
   .then(async () => {
     const app = express();
     app.use(helmet());
