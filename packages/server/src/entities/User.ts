@@ -8,8 +8,8 @@ import {
 } from 'typeorm';
 import { TodoItem } from './TodoItem';
 
-@Entity()
-export class User {
+@Entity('users')
+class User {
   @PrimaryGeneratedColumn()
   readonly id: number;
 
@@ -31,3 +31,4 @@ export class User {
   @OneToMany(() => TodoItem, (todoItem) => todoItem.createdBy)
   todoItems: TodoItem[];
 }
+export { User };

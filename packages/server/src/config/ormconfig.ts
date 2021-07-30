@@ -9,11 +9,11 @@ export default {
   database: 'test',
   synchronize: true,
   logging: false,
-  entities: ['src/entity/**/*.ts'],
-  migrations: ['src/database/migrations/**/*.ts'],
-  subscribers: ['src/subscriber/**/*.ts'],
+  entities: [__dirname + '/../entities/**/*.ts'],
+  migrations: [__dirname + '/../migrations/**/*.ts'],
+  subscribers: [__dirname + '/../subscribers/**/*.ts'],
   cli: {
-    entitiesDir: 'src/entity',
+    entitiesDir: 'src/entities',
     migrationsDir: 'src/database/migrations',
     subscribersDir: 'src/subscriber'
   }
