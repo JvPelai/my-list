@@ -12,6 +12,8 @@
     "prettier"
   ],
   "rules": {
-    "prettier/prettier": 2
+    "prettier/prettier": 2,
+    "no-empty-function": "off",
+    "@typescript-eslint/no-empty-function": ["error", { "allow": ["private-constructors"] }]
   }
 }
