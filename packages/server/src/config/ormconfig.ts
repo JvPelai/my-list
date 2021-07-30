@@ -10,11 +10,11 @@ export default {
   synchronize: true,
   logging: false,
   entities: ['src/entity/**/*.ts'],
-  migrations: ['src/migration/**/*.ts'],
+  migrations: ['src/database/migrations/**/*.ts'],
   subscribers: ['src/subscriber/**/*.ts'],
   cli: {
     entitiesDir: 'src/entity',
-    migrationsDir: 'src/migration',
+    migrationsDir: 'src/database/migrations',
     subscribersDir: 'src/subscriber'
   }
 } as ConnectionOptions;

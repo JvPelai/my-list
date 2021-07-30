@@ -1,26 +1,26 @@
 import {
-  Entity,
-  PrimaryGeneratedColumn,
   Column,
-  OneToMany,
   CreateDateColumn,
+  Entity,
+  ManyToOne,
+  PrimaryGeneratedColumn,
   UpdateDateColumn
 } from 'typeorm';
-import { TodoItem } from './TodoItem';
+import { User } from './User';
 
 @Entity()
-export class User {
+export class TodoItem {
   @PrimaryGeneratedColumn()
   readonly id: number;
 
   @Column()
-  name: string;
+  title: string;
 
   @Column()
-  email: string;
+  description: string;
 
   @Column()
-  password: string;
+  category: string;
 
   @CreateDateColumn()
   created_at: Date;
@@ -28,6 +28,6 @@ export class User {
   @UpdateDateColumn()
   updated_at: Date;
 
-  @OneToMany(() => TodoItem, (todoItem) => todoItem.createdBy)
-  todoItems: TodoItem[];
+  @ManyToOne(() => User, (user) => user.todoItems)
+  createdBy: User;
 }
