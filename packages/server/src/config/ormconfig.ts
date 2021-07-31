@@ -8,13 +8,14 @@ export default {
   password: 'root',
   database: 'test',
   synchronize: true,
-  logging: false,
+  logging: ['error', 'query', 'schema'],
+  dropSchema: false,
   entities: [__dirname + '/../entities/**/*.ts'],
-  migrations: [__dirname + '/../migrations/**/*.ts'],
+  migrations: [__dirname + '/../database/migrations/**/*.{t,j}s'],
   subscribers: [__dirname + '/../subscribers/**/*.ts'],
   cli: {
     entitiesDir: __dirname + '/../entities',
-    migrationsDir: __dirname + '/../migrations',
+    migrationsDir: __dirname + '/../database/migrations',
     subscribersDir: __dirname + '/../subscribers'
   }
 } as ConnectionOptions;

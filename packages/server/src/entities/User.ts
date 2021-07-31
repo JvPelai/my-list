@@ -1,17 +1,18 @@
 import {
   Entity,
-  PrimaryGeneratedColumn,
   Column,
   OneToMany,
   CreateDateColumn,
-  UpdateDateColumn
+  UpdateDateColumn,
+  PrimaryColumn
 } from 'typeorm';
 import { TodoItem } from './TodoItem';
+import { v4 as uuid } from 'uuid';
 
 @Entity('users')
 class User {
-  @PrimaryGeneratedColumn()
-  readonly id: number;
+  @PrimaryColumn()
+  readonly id: string;
 
   @Column()
   name: string;
@@ -30,5 +31,11 @@ class User {
 
   @OneToMany(() => TodoItem, (todoItem) => todoItem.createdBy)
   todoItems: TodoItem[];
+
+  constructor() {
+    if (!this.id) {
+      this.id = uuid();
+    }
+  }
 }
 export { User };
