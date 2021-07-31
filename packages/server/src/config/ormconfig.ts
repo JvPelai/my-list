@@ -9,7 +9,7 @@ export default {
   database: 'test',
   synchronize: true,
   logging: ['error', 'query', 'schema'],
-  dropSchema: false,
+  dropSchema: true,
   entities: [__dirname + '/../entities/**/*.ts'],
   migrations: [__dirname + '/../database/migrations/**/*.{t,j}s'],
   subscribers: [__dirname + '/../subscribers/**/*.ts'],

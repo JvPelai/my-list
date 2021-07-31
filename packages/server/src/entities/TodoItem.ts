@@ -8,7 +8,7 @@ import {
 } from 'typeorm';
 import { User } from './User';
 
-@Entity('todo-items')
+@Entity('todo_items')
 export class TodoItem {
   @PrimaryGeneratedColumn()
   readonly id: number;
