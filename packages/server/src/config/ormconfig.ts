@@ -13,8 +13,8 @@ export default {
   migrations: [__dirname + '/../migrations/**/*.ts'],
   subscribers: [__dirname + '/../subscribers/**/*.ts'],
   cli: {
-    entitiesDir: 'src/entities',
-    migrationsDir: 'src/database/migrations',
-    subscribersDir: 'src/subscriber'
+    entitiesDir: __dirname + '/../entities',
+    migrationsDir: __dirname + '/../migrations',
+    subscribersDir: __dirname + '/../subscribers'
   }
 } as ConnectionOptions;
