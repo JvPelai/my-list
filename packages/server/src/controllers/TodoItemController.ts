@@ -1,3 +1,4 @@
+import { validate } from 'class-validator';
 import { Request, Response } from 'express';
 import { TodoItemDTO } from '../dto/todo-item.dto';
 import { UserHelper } from '../helpers';
@@ -16,6 +17,10 @@ class TodoItemController {
     }
     const { category, title, description } = request.body;
     const todoItemData = TodoItemDTO.create({ category, title, description });
+    const details = await validate(todoItemData);
+    if (details.length > 0) {
+      return response.status(400).json(details);
+    }
     try {
       const userAuthorized = await UserHelper.userAuthorized(token, user);
       if (!userAuthorized) {
@@ -41,6 +46,10 @@ class TodoItemController {
       description,
       id: parseInt(id)
     });
+    const details = await validate(todoItemData);
+    if (details.length > 0) {
+      return response.status(400).json(details);
+    }
     try {
       const userAuthorized = await UserHelper.userAuthorized(token, user);
       if (!userAuthorized) {

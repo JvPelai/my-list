@@ -13,13 +13,6 @@ class UsersRepositories extends Repository<User> {
       .getMany();
     return todoItems;
   }
-  async userExists(email: string): Promise<boolean> {
-    const user = await this.findOne({ email });
-    if (!user) {
-      return false;
-    }
-    return true;
-  }
 }
 
 export { UsersRepositories };

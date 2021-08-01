@@ -1,4 +1,5 @@
 import { hash } from 'bcryptjs';
+import { validate } from 'class-validator';
 import { Request, Response } from 'express';
 import { AuthDTO } from '../dto/auth.dto';
 import { CreateUserDTO } from '../dto/create-user.dto';
@@ -21,6 +22,10 @@ class UserController {
         email,
         password: passwordHash
       });
+      const details = await validate(userData);
+      if (details.length > 0) {
+        return response.status(400).json(details);
+      }
       const newUser = await createUser(userData);
 
       return response.status(201).json(newUser);
@@ -32,6 +37,10 @@ class UserController {
   static async auth(request: Request, response: Response): Promise<Response> {
     const { email, password } = request.body;
     const authData = AuthDTO.create({ email, password });
+    const details = await validate(authData);
+    if (details.length > 0) {
+      return response.status(400).json(details);
+    }
     try {
       const token = await authenticateUser(authData);
       if (!token) {
