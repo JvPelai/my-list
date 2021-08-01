@@ -3,7 +3,7 @@ import { AuthDTO } from '../dto/auth.dto';
 import { CreateUserDTO } from '../dto/create-user.dto';
 import { User } from '../entities/User';
 import { UsersRepositories } from '../repositories/UserRepository';
-import { sign, verify } from 'jsonwebtoken';
+import { sign } from 'jsonwebtoken';
 import { compare } from 'bcryptjs';
 import { TodoItem } from '../entities/TodoItem';
 
@@ -24,12 +24,12 @@ const authenticateUser = async (authData: AuthDTO): Promise<string | null> => {
   try {
     const user = await userRepository.findOne({ email: authData.email });
     if (!user) {
-      throw new Error('Incorrect email/password');
+      return null;
     }
     const passwordMatch = await compare(authData.password, user?.password);
 
     if (!passwordMatch) {
-      throw new Error('Incorrect email/password');
+      return null;
     }
 
     const token = sign(
@@ -44,22 +44,12 @@ const authenticateUser = async (authData: AuthDTO): Promise<string | null> => {
     );
     return token;
   } catch (error) {
-    console.log(error);
-    return null;
+    throw new Error(error);
   }
 };
 
-const getTodoItemsByUser = async (
-  userId: string,
-  token: string
-): Promise<TodoItem[]> => {
+const getTodoItemsByUser = async (userId: string): Promise<TodoItem[]> => {
   const userRepository = getCustomRepository(UsersRepositories);
-  verify(token, 'supersecret', (err, decoded) => {
-    if (err) {
-      throw new Error('authorization failed');
-    }
-    console.log(decoded);
-  });
   const items = await userRepository.getTodoItems(userId);
   return items;
 };

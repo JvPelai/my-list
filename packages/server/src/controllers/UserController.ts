@@ -1,20 +1,19 @@
 import { hash } from 'bcryptjs';
 import { Request, Response } from 'express';
-import { getCustomRepository } from 'typeorm';
 import { AuthDTO } from '../dto/auth.dto';
 import { CreateUserDTO } from '../dto/create-user.dto';
-import { UsersRepositories } from '../repositories/UserRepository';
+import { UserHelper } from '../helpers';
 import { getTodoItemsByUser } from '../services/UserServices';
 import { authenticateUser, createUser } from '../services/UserServices';
 
 class UserController {
   static async create(request: Request, response: Response): Promise<Response> {
     const { name, email, password } = request.body;
-    const userRepository = getCustomRepository(UsersRepositories);
+
     try {
-      const userAlreadyExists = await userRepository.userExists(email);
+      const userAlreadyExists = await UserHelper.userExists(email);
       if (userAlreadyExists) {
-        return response.status(409).json('User already exists');
+        return response.status(400).json('User already exists');
       }
       const passwordHash = await hash(password, 8);
       const userData = CreateUserDTO.create({
@@ -24,7 +23,7 @@ class UserController {
       });
       const newUser = await createUser(userData);
 
-      return response.json(newUser).status(201);
+      return response.status(201).json(newUser);
     } catch (error) {
       return response.status(500).json(error);
     }
@@ -35,9 +34,12 @@ class UserController {
     const authData = AuthDTO.create({ email, password });
     try {
       const token = await authenticateUser(authData);
+      if (!token) {
+        return response.status(401).json('Incorrect email/password');
+      }
       return response.status(200).json(token);
     } catch (error) {
-      return response.json(error);
+      return response.status(500).json(error);
     }
   }
 
@@ -46,9 +48,20 @@ class UserController {
     response: Response
   ): Promise<Response> {
     const { user } = request.params;
-    const token = request.headers['authorization'];
-    const items = await getTodoItemsByUser(user, token as string);
-    return response.json(items);
+    const token = request.headers['authorization'] as string;
+    if (!token) {
+      return response.status(401).json('You must provide an access token');
+    }
+    try {
+      const userAuthorized = await UserHelper.userAuthorized(token, user);
+      if (!userAuthorized) {
+        return response.status(401).json('Invalid user');
+      }
+      const items = await getTodoItemsByUser(user);
+      return response.json(items);
+    } catch (error) {
+      return response.status(500).json(error);
+    }
   }
 }
 

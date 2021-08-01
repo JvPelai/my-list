@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import { TodoItemDTO } from '../dto/todo-item.dto';
+import { UserHelper } from '../helpers';
 import {
   createTodoItem,
   deleteTodoItem,
@@ -8,36 +9,66 @@ import {
 
 class TodoItemController {
   static async create(request: Request, response: Response): Promise<Response> {
+    const { user } = request.params;
+    const token = request.headers['authorization'] as string;
+    if (!token) {
+      return response.status(401).json('You must provide an access token');
+    }
     const { category, title, description } = request.body;
     const todoItemData = TodoItemDTO.create({ category, title, description });
-    const token = request.headers['authorization'];
-    const newItem = await createTodoItem(todoItemData, token as string);
-    return response.json(newItem);
+    try {
+      const userAuthorized = await UserHelper.userAuthorized(token, user);
+      if (!userAuthorized) {
+        return response.status(401).json('Invalid user');
+      }
+      const newItem = await createTodoItem(todoItemData, user);
+      return response.status(201).json(newItem);
+    } catch (error) {
+      return response.status(500).json(error);
+    }
   }
 
   static async update(request: Request, response: Response): Promise<Response> {
+    const { user, id } = request.params;
+    const token = request.headers['authorization'] as string;
+    if (!token) {
+      return response.status(401).json('You must provide an access token');
+    }
     const { category, title, description } = request.body;
-    const { id } = request.params;
     const todoItemData = TodoItemDTO.create({
       category,
       title,
       description,
       id: parseInt(id)
     });
-    const token = request.headers['authorization'];
-    const updatedItem = await updateTodoItem(todoItemData, token as string);
-    return response.json(updatedItem);
+    try {
+      const userAuthorized = await UserHelper.userAuthorized(token, user);
+      if (!userAuthorized) {
+        return response.status(401).json('Invalid user');
+      }
+      const updatedItem = await updateTodoItem(todoItemData);
+      return response.status(200).json(updatedItem);
+    } catch (error) {
+      return response.status(500).json(error);
+    }
   }
 
   static async delete(request: Request, response: Response): Promise<Response> {
     const { id, user } = request.params;
-    const token = request.headers['authorization'];
-    const deleteOperationResult = await deleteTodoItem(
-      parseInt(id),
-      user,
-      token as string
-    );
-    return response.json(deleteOperationResult);
+    const token = request.headers['authorization'] as string;
+    if (!token) {
+      return response.status(401).json('You must provide an access token');
+    }
+    try {
+      const userAuthorized = await UserHelper.userAuthorized(token, user);
+      if (!userAuthorized) {
+        return response.status(401).json('Invalid user');
+      }
+      const deleteOperationResult = await deleteTodoItem(parseInt(id));
+      return response.status(200).json(deleteOperationResult);
+    } catch (error) {
+      return response.status(500).json(error);
+    }
   }
 }
 
