@@ -1,7 +1,18 @@
-import { EntityRepository, Repository } from 'typeorm';
+import { EntityRepository, getCustomRepository, Repository } from 'typeorm';
+import { TodoItem } from '../entities/TodoItem';
 import { User } from '../entities/User';
+import { TodoItemsRepositories } from './TodoItemRepository';
 
 @EntityRepository(User)
-class UsersRepositories extends Repository<User> {}
+class UsersRepositories extends Repository<User> {
+  async getTodoItems(userId: string): Promise<TodoItem[]> {
+    const todoItemsRepository = getCustomRepository(TodoItemsRepositories);
+    const todoItems = await todoItemsRepository
+      .createQueryBuilder('todo_items')
+      .where('todo_items.createdById = :id', { id: userId })
+      .getMany();
+    return todoItems;
+  }
+}
 
 export { UsersRepositories };

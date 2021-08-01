@@ -2,6 +2,7 @@ import { hash } from 'bcryptjs';
 import { Request, Response } from 'express';
 import { AuthDTO } from '../dto/auth.dto';
 import { CreateUserDTO } from '../dto/create-user.dto';
+import { getTodoItemsByUser } from '../services/UserServices';
 import { authenticateUser, createUser } from '../services/UserServices';
 
 class UserController {
@@ -23,6 +24,16 @@ class UserController {
     const authData = AuthDTO.create({ email, password });
     const token = await authenticateUser(authData);
     return response.json(token);
+  }
+
+  static async getUserTodoItems(
+    request: Request,
+    response: Response
+  ): Promise<Response> {
+    const { user } = request.params;
+    const token = request.headers['authorization'];
+    const items = await getTodoItemsByUser(user, token as string);
+    return response.json(items);
   }
 }
 

@@ -3,8 +3,9 @@ import { AuthDTO } from '../dto/auth.dto';
 import { CreateUserDTO } from '../dto/create-user.dto';
 import { User } from '../entities/User';
 import { UsersRepositories } from '../repositories/UserRepository';
-import { sign } from 'jsonwebtoken';
+import { sign, verify } from 'jsonwebtoken';
 import { compare } from 'bcryptjs';
+import { TodoItem } from '../entities/TodoItem';
 
 const createUser = async (userData: CreateUserDTO): Promise<User | null> => {
   const userRepository = getCustomRepository(UsersRepositories);
@@ -48,4 +49,19 @@ const authenticateUser = async (authData: AuthDTO): Promise<string | null> => {
   }
 };
 
-export { createUser, authenticateUser };
+const getTodoItemsByUser = async (
+  userId: string,
+  token: string
+): Promise<TodoItem[]> => {
+  const userRepository = getCustomRepository(UsersRepositories);
+  verify(token, 'supersecret', (err, decoded) => {
+    if (err) {
+      throw new Error('authorization failed');
+    }
+    console.log(decoded);
+  });
+  const items = await userRepository.getTodoItems(userId);
+  return items;
+};
+
+export { createUser, authenticateUser, getTodoItemsByUser };
