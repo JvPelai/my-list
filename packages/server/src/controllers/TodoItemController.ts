@@ -1,6 +1,10 @@
 import { Request, Response } from 'express';
 import { TodoItemDTO } from '../dto/todo-item.dto';
-import { createTodoItem, updateTodoItem } from '../services/TodoItemServices';
+import {
+  createTodoItem,
+  deleteTodoItem,
+  updateTodoItem
+} from '../services/TodoItemServices';
 
 class TodoItemController {
   static async create(request: Request, response: Response): Promise<Response> {
@@ -23,6 +27,17 @@ class TodoItemController {
     const token = request.headers['authorization'];
     const updatedItem = await updateTodoItem(todoItemData, token as string);
     return response.json(updatedItem);
+  }
+
+  static async delete(request: Request, response: Response): Promise<Response> {
+    const { id, user } = request.params;
+    const token = request.headers['authorization'];
+    const deleteOperationResult = await deleteTodoItem(
+      parseInt(id),
+      user,
+      token as string
+    );
+    return response.json(deleteOperationResult);
   }
 }
 

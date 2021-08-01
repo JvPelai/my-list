@@ -39,7 +39,7 @@ const authenticateUser = async (authData: AuthDTO): Promise<string | null> => {
       'supersecret',
       {
         subject: user.id,
-        expiresIn: '5m'
+        expiresIn: '1d'
       }
     );
     return token;

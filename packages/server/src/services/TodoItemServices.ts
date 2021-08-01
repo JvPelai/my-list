@@ -1,5 +1,5 @@
 import { JwtPayload, verify } from 'jsonwebtoken';
-import { getCustomRepository, UpdateResult } from 'typeorm';
+import { DeleteResult, getCustomRepository, UpdateResult } from 'typeorm';
 import { TodoItemDTO } from '../dto/todo-item.dto';
 import { TodoItemsRepositories } from '../repositories/TodoItemRepository';
 import { UsersRepositories } from '../repositories/UserRepository';
@@ -34,4 +34,15 @@ const updateTodoItem = async (
   return updatedTodoItem;
 };
 
-export { createTodoItem, updateTodoItem };
+const deleteTodoItem = async (
+  itemId: number,
+  userId: string,
+  token: string
+): Promise<DeleteResult> => {
+  const todoItemsRepository = getCustomRepository(TodoItemsRepositories);
+  const user = verify(token, 'supersecret');
+  const deleteTodoItem = await todoItemsRepository.delete(itemId);
+  return deleteTodoItem;
+};
+
+export { createTodoItem, updateTodoItem, deleteTodoItem };
