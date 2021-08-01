@@ -7,6 +7,7 @@ import './database/index';
 import { router } from './routes';
 dotenv.config();
 const port = process.env.PORT;
+export const jwtSecretKey = process.env.JWT_SECRET;
 
 const app = express();
 app.use(helmet());

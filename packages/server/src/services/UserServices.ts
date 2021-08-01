@@ -6,6 +6,7 @@ import { UsersRepositories } from '../repositories/UserRepository';
 import { sign } from 'jsonwebtoken';
 import { compare } from 'bcryptjs';
 import { TodoItem } from '../entities/TodoItem';
+import { jwtSecretKey } from '..';
 
 const createUser = async (userData: CreateUserDTO): Promise<User | null> => {
   const userRepository = getCustomRepository(UsersRepositories);
@@ -36,7 +37,7 @@ const authenticateUser = async (authData: AuthDTO): Promise<string | null> => {
       {
         email: authData.email
       },
-      'supersecret',
+      jwtSecretKey as string,
       {
         subject: user.id,
         expiresIn: '1d'

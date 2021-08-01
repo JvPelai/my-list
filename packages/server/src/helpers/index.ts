@@ -1,5 +1,6 @@
 import { JwtPayload, verify } from 'jsonwebtoken';
 import { getCustomRepository } from 'typeorm';
+import { jwtSecretKey } from '..';
 import { UsersRepositories } from '../repositories/UserRepository';
 
 class UserHelper {
@@ -12,7 +13,7 @@ class UserHelper {
     return true;
   }
   static async userAuthorized(token: string, userId: string): Promise<boolean> {
-    const context = verify(token, 'supersecret') as JwtPayload;
+    const context = verify(token, jwtSecretKey as string) as JwtPayload;
     const { email, sub } = context;
     const userExists = await this.userExists(email);
     const validUser = userExists && sub === userId;
