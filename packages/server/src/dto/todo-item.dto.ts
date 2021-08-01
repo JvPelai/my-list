@@ -2,6 +2,7 @@ class TodoItemDTO {
   category: string;
   title: string;
   description: string;
+  id?: number;
 
   private constructor() {}
 
@@ -10,6 +11,9 @@ class TodoItemDTO {
     instance.category = item.category;
     instance.title = item.title;
     instance.description = item.description;
+    if (item.id) {
+      instance.id = item.id;
+    }
     return instance;
   }
 }

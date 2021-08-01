@@ -1,5 +1,5 @@
 import { JwtPayload, verify } from 'jsonwebtoken';
-import { getCustomRepository } from 'typeorm';
+import { getCustomRepository, UpdateResult } from 'typeorm';
 import { TodoItemDTO } from '../dto/todo-item.dto';
 import { TodoItemsRepositories } from '../repositories/TodoItemRepository';
 import { UsersRepositories } from '../repositories/UserRepository';
@@ -21,4 +21,17 @@ const createTodoItem = async (
   return user;
 };
 
-export { createTodoItem };
+const updateTodoItem = async (
+  data: TodoItemDTO,
+  token: string
+): Promise<UpdateResult> => {
+  const todoItemsRepository = getCustomRepository(TodoItemsRepositories);
+  const user = verify(token, 'supersecret');
+  const updatedTodoItem = await todoItemsRepository.update(
+    data.id as number,
+    data
+  );
+  return updatedTodoItem;
+};
+
+export { createTodoItem, updateTodoItem };
