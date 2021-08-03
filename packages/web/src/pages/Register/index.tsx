@@ -17,7 +17,7 @@ const RegisterForm: React.FC = () => {
       console.log(user);
       history.push('/');
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   };
 
