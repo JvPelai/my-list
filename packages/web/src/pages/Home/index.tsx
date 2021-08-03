@@ -22,7 +22,7 @@ const Home: React.FC = () => {
             MyList
           </Typography>
           <Button
-            onClick={() => history.push('/login')}
+            onClick={() => history.push('/register')}
             color="inherit"
             variant="text"
             component="button"
