@@ -21,14 +21,25 @@ const Home: React.FC = () => {
           <Typography variant="h6" className="flex-grow-1">
             MyList
           </Typography>
-          <Button
-            onClick={() => history.push('/register')}
-            color="inherit"
-            variant="text"
-            component="button"
-          >
-            Login
-          </Button>
+          <div>
+            <Button
+              onClick={() => history.push('/login')}
+              color="inherit"
+              variant="text"
+              component="button"
+            >
+              Login
+            </Button>
+            {' / '}
+            <Button
+              onClick={() => history.push('/register')}
+              color="inherit"
+              variant="text"
+              component="button"
+            >
+              sign-up
+            </Button>
+          </div>
         </Toolbar>
       </AppBar>
     </div>

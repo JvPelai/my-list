@@ -2,16 +2,25 @@ import React from 'react';
 import { Button, Container, TextField, Typography } from '@material-ui/core';
 import { Formik, Form } from 'formik';
 import { useHistory } from 'react-router-dom';
-import registrationSchema, {
+import {
+  ILogin,
   initialValues,
-  IRegistration
+  IRegistration,
+  loginSchema,
+  registrationSchema
 } from './FormValidation';
-import useUser from '../../hooks/useUser';
+import useUser from '../../../hooks/useUser';
 
-const RegisterForm: React.FC = () => {
+type FormProps = {
+  login: boolean;
+};
+
+const RegisterForm: React.FC<FormProps> = ({ login }: FormProps) => {
   const history = useHistory();
-  const { createUser } = useUser();
-  const submitForm = async (values: IRegistration) => {
+  const { createUser, loginUser } = useUser();
+  const formSchema = login ? loginSchema : registrationSchema;
+
+  const submitRegistration = async (values: IRegistration) => {
     try {
       const user = await createUser(values);
       console.log(user);
@@ -21,6 +30,18 @@ const RegisterForm: React.FC = () => {
     }
   };
 
+  const submitLogin = async (values: ILogin) => {
+    try {
+      const { email, password } = values;
+      const authToken = await loginUser({ email, password });
+      console.log(authToken);
+      history.push('/');
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  const submitForm = login ? submitLogin : submitRegistration;
+
   return (
     <>
       <Container component="article" maxWidth="xs">
@@ -28,7 +49,7 @@ const RegisterForm: React.FC = () => {
           Sign Up
         </Typography>
         <Formik
-          validationSchema={registrationSchema}
+          validationSchema={formSchema}
           initialValues={initialValues}
           onSubmit={submitForm}
         >
@@ -41,19 +62,21 @@ const RegisterForm: React.FC = () => {
             handleBlur
           }) => (
             <Form>
-              <TextField
-                id="name"
-                label="name"
-                name="name"
-                error={!!errors.name && touched.name}
-                helperText={touched.name ? errors.name : ''}
-                disabled={isSubmitting}
-                value={values.name}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                margin="normal"
-                fullWidth
-              />
+              {!login && (
+                <TextField
+                  id="name"
+                  label="name"
+                  name="name"
+                  error={!!errors.name && touched.name}
+                  helperText={touched.name ? errors.name : ''}
+                  disabled={isSubmitting}
+                  value={values.name}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  margin="normal"
+                  fullWidth
+                />
+              )}
               <TextField
                 id="email"
                 label="email"
