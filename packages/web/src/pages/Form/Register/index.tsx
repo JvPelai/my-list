@@ -10,6 +10,7 @@ import {
   registrationSchema
 } from './FormValidation';
 import useUser from '../../../hooks/useUser';
+import User from '../../../interfaces/user';
 
 type FormProps = {
   login: boolean;
@@ -17,28 +18,32 @@ type FormProps = {
 
 const RegisterForm: React.FC<FormProps> = ({ login }: FormProps) => {
   const history = useHistory();
-  const { createUser, loginUser } = useUser();
+  const { createUser, loginUser, userData, setUserData } = useUser();
   const formSchema = login ? loginSchema : registrationSchema;
 
   const submitRegistration = async (values: IRegistration) => {
     try {
-      const user = await createUser(values);
-      console.log(user);
+      await createUser(values);
+
       history.push('/');
     } catch (error) {
-      console.error(error);
+      console.log(error);
     }
   };
 
   const submitLogin = async (values: ILogin) => {
     try {
-      const { email, password } = values;
-      const authToken = await loginUser({ email, password });
-      console.log(authToken);
-      history.push('/');
+      const authData = await loginUser({
+        email: values.email,
+        password: values.password
+      });
+
+      const { authToken, email, name, userId } = authData as User;
+      setUserData({ authToken, email, name, userId });
     } catch (error) {
       console.error(error);
     }
+    history.push('/');
   };
   const submitForm = login ? submitLogin : submitRegistration;
 
@@ -51,7 +56,9 @@ const RegisterForm: React.FC<FormProps> = ({ login }: FormProps) => {
         <Formik
           validationSchema={formSchema}
           initialValues={initialValues}
-          onSubmit={submitForm}
+          onSubmit={async (values) => {
+            await submitForm(values);
+          }}
         >
           {({
             isSubmitting,

@@ -42,11 +42,11 @@ class UserController {
       return response.status(400).json(details);
     }
     try {
-      const token = await authenticateUser(authData);
-      if (!token) {
+      const context = await authenticateUser(authData);
+      if (!context) {
         return response.status(401).json('Incorrect email/password');
       }
-      return response.status(200).json(token);
+      return response.status(200).json(context);
     } catch (error) {
       return response.status(500).json(error);
     }

@@ -20,7 +20,8 @@ const createUser = async (userData: CreateUserDTO): Promise<User | null> => {
   }
 };
 
-const authenticateUser = async (authData: AuthDTO): Promise<string | null> => {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const authenticateUser = async (authData: AuthDTO): Promise<any | null> => {
   const userRepository = getCustomRepository(UsersRepositories);
   try {
     const user = await userRepository.findOne({ email: authData.email });
@@ -43,7 +44,13 @@ const authenticateUser = async (authData: AuthDTO): Promise<string | null> => {
         expiresIn: '1d'
       }
     );
-    return token;
+    const response = {
+      name: user.name,
+      email: user.email,
+      userId: user.id,
+      authToken: token
+    };
+    return response;
   } catch (error) {
     throw new Error(error);
   }
