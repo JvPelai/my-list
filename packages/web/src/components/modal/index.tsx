@@ -2,10 +2,7 @@ import React, { useState } from 'react';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import Modal from '@material-ui/core/Modal';
 import { ActionButton } from '../Inputs/ActionButtons';
-
-function rand() {
-  return Math.round(Math.random() * 20) - 10;
-}
+import { FormPropsTextFields } from '../Inputs/Fields';
 
 function getModalStyle() {
   const top = 50;
@@ -44,10 +41,8 @@ const NewTodoItemModal: React.FC = () => {
   };
   const body = (
     <div style={modalStyle} className={classes.paper}>
-      <h2 id="simple-modal-title">Text in a modal</h2>
-      <p id="simple-modal-description">
-        Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
-      </p>
+      <h2 id="simple-modal-title">New Item</h2>
+      <FormPropsTextFields />
     </div>
   );
   return (

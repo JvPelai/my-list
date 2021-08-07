@@ -10,7 +10,6 @@ import { decode } from 'jsonwebtoken';
 import React, { useState } from 'react';
 
 import { useHistory } from 'react-router-dom';
-import { ActionButton } from '../../components/Inputs/ActionButtons';
 import { NewTodoItemModal } from '../../components/modal';
 
 import User from '../../interfaces/user';
