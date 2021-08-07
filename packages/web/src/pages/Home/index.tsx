@@ -7,7 +7,7 @@ import {
 } from '@material-ui/core';
 import { Menu } from '@material-ui/icons';
 import { decode } from 'jsonwebtoken';
-import React, { useState } from 'react';
+import React from 'react';
 
 import { useHistory } from 'react-router-dom';
 import { NewTodoItemModal } from '../../components/modal';
@@ -18,7 +18,11 @@ const Home: React.FC = () => {
   const history = useHistory();
   const user = localStorage.getItem('user');
   const decodedData = decode(user as string);
-  const { name } = decodedData as User;
+  let userName = '';
+  if (decodedData) {
+    const { name } = decodedData as User;
+    userName = name;
+  }
 
   return (
     <>
@@ -52,7 +56,7 @@ const Home: React.FC = () => {
                 </Button>
               </div>
             ) : (
-              <h1>{name}</h1>
+              <h1>{userName}</h1>
             )}
           </Toolbar>
         </AppBar>

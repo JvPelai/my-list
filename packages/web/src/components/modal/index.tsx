@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import Modal from '@material-ui/core/Modal';
 import { ActionButton } from '../Inputs/ActionButtons';
-import { FormPropsTextFields } from '../Inputs/Fields';
+import { TodoItemTextFields } from '../Inputs/Fields';
 
 function getModalStyle() {
   const top = 50;
@@ -42,7 +42,7 @@ const NewTodoItemModal: React.FC = () => {
   const body = (
     <div style={modalStyle} className={classes.paper}>
       <h2 id="simple-modal-title">New Item</h2>
-      <FormPropsTextFields />
+      <TodoItemTextFields />
     </div>
   );
   return (

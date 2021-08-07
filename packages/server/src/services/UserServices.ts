@@ -42,6 +42,7 @@ const authenticateUser = async (authData: AuthDTO): Promise<any | null> => {
       },
       jwtSecretKey as string,
       {
+        subject: user.id,
         expiresIn: '1d'
       }
     );

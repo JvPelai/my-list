@@ -1,17 +1,19 @@
 import axios from 'axios';
+import { decode } from 'jsonwebtoken';
 import TodoItem from '../interfaces/todoItem';
+import User from '../interfaces/user';
 
 type UseTodoItemReturn = {
-  createTodoItem: (data: TodoItem, params: any) => Promise<TodoItem>;
+  createTodoItem: (data: TodoItem) => Promise<TodoItem | null>;
   updateTodoItem: (data: TodoItem, params: any) => Promise<unknown>;
 };
 
 const useTodoItem = (): UseTodoItemReturn => {
-  const createTodoItem = async (
-    data: TodoItem,
-    params: any
-  ): Promise<TodoItem> => {
+  const createTodoItem = async (data: TodoItem): Promise<TodoItem | null> => {
     const authToken = localStorage.getItem('user') as string;
+    const decodedData = decode(authToken);
+    const { userId } = decodedData as User;
+    console.log(authToken, decodedData, data);
     const instance = axios.create({
       baseURL: 'http://localhost:8000',
       headers: {
@@ -19,8 +21,12 @@ const useTodoItem = (): UseTodoItemReturn => {
         authorization: authToken
       }
     });
-    const newItem = await instance.post(`/users/${params.userId}/todo`, data);
-    return newItem.data;
+    try {
+      const newItem = await instance.post(`/users/${userId}/todo`, data);
+      return newItem.data;
+    } catch (error) {
+      return null;
+    }
   };
 
   const updateTodoItem = async (
