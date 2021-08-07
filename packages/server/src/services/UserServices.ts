@@ -36,21 +36,16 @@ const authenticateUser = async (authData: AuthDTO): Promise<any | null> => {
 
     const token = sign(
       {
-        email: authData.email
+        name: user.name,
+        email: authData.email,
+        userId: user.id
       },
       jwtSecretKey as string,
       {
-        subject: user.id,
         expiresIn: '1d'
       }
     );
-    const response = {
-      name: user.name,
-      email: user.email,
-      userId: user.id,
-      authToken: token
-    };
-    return response;
+    return token;
   } catch (error) {
     throw new Error(error);
   }

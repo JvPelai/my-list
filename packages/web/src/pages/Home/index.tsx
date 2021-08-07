@@ -6,15 +6,21 @@ import {
   Typography
 } from '@material-ui/core';
 import { Menu } from '@material-ui/icons';
-import React from 'react';
+import { decode } from 'jsonwebtoken';
+import React, { useState } from 'react';
 
 import { useHistory } from 'react-router-dom';
+import { ActionButton } from '../../components/Inputs/ActionButtons';
+import { NewTodoItemModal } from '../../components/modal';
 
-import useUser from '../../hooks/useUser';
+import User from '../../interfaces/user';
 
 const Home: React.FC = () => {
   const history = useHistory();
-  const { userData } = useUser();
+  const user = localStorage.getItem('user');
+  const decodedData = decode(user as string);
+  const { name } = decodedData as User;
+
   return (
     <>
       <div className="flex-grow-1">
@@ -26,28 +32,34 @@ const Home: React.FC = () => {
             <Typography variant="h6" className="flex-grow-1">
               MyList
             </Typography>
-            <div>
-              <Button
-                onClick={() => history.push('/login')}
-                color="inherit"
-                variant="text"
-                component="button"
-              >
-                Login
-              </Button>
-              {' / '}
-              <Button
-                onClick={() => history.push('/register')}
-                color="inherit"
-                variant="text"
-                component="button"
-              >
-                sign-up
-              </Button>
-            </div>
+            {!user ? (
+              <div>
+                <Button
+                  onClick={() => history.push('/login')}
+                  color="inherit"
+                  variant="text"
+                  component="button"
+                >
+                  Login
+                </Button>
+                {' / '}
+                <Button
+                  onClick={() => history.push('/register')}
+                  color="inherit"
+                  variant="text"
+                  component="button"
+                >
+                  sign-up
+                </Button>
+              </div>
+            ) : (
+              <h1>{name}</h1>
+            )}
           </Toolbar>
         </AppBar>
       </div>
+
+      <NewTodoItemModal />
     </>
   );
 };

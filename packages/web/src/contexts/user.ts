@@ -1,12 +1,12 @@
 import { createContext } from 'react';
 import User from '../interfaces/user';
 
-type IUserContext = {
+export type IUserContext = {
   userData: User | null;
 };
 
-const UserContext = createContext<IUserContext>({
+const userContext = createContext<IUserContext>({
   userData: null
 });
 
-export default UserContext;
+export default userContext;

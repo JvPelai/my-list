@@ -2,6 +2,7 @@ import React from 'react';
 import { Button, Container, TextField, Typography } from '@material-ui/core';
 import { Formik, Form } from 'formik';
 import { useHistory } from 'react-router-dom';
+import { decode } from 'jsonwebtoken';
 import {
   ILogin,
   initialValues,
@@ -18,7 +19,7 @@ type FormProps = {
 
 const RegisterForm: React.FC<FormProps> = ({ login }: FormProps) => {
   const history = useHistory();
-  const { createUser, loginUser, userData, setUserData } = useUser();
+  const { createUser, loginUser, setUserData } = useUser();
   const formSchema = login ? loginSchema : registrationSchema;
 
   const submitRegistration = async (values: IRegistration) => {
@@ -37,12 +38,14 @@ const RegisterForm: React.FC<FormProps> = ({ login }: FormProps) => {
         email: values.email,
         password: values.password
       });
-
-      const { authToken, email, name, userId } = authData as User;
-      setUserData({ authToken, email, name, userId });
+      localStorage.setItem('user', authData);
+      const decodedData = decode(authData);
+      const { name, email, userId } = decodedData as User;
+      setUserData({ name, email, userId } as User);
     } catch (error) {
       console.error(error);
     }
+
     history.push('/');
   };
   const submitForm = login ? submitLogin : submitRegistration;

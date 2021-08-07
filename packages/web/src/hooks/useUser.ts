@@ -8,11 +8,12 @@ type UseUserReturn = {
   userData: null | User;
   setUserData: Dispatch<SetStateAction<User | null>>;
   createUser: (data: IRegistration) => Promise<unknown>;
-  loginUser: (data: any) => Promise<unknown>;
+  loginUser: (data: any) => Promise<string | any>;
 };
 
 const useUser = (): UseUserReturn => {
   const [userData, setUserData] = useState<null | User>(null);
+
   const createUser = async (data: any): Promise<unknown> => {
     const instance = axios.create({
       baseURL: 'http://localhost:8000',
@@ -24,7 +25,7 @@ const useUser = (): UseUserReturn => {
     return user.data;
   };
 
-  const loginUser = async (data: any): Promise<User | null> => {
+  const loginUser = async (data: any): Promise<string | null> => {
     const instance = axios.create({
       baseURL: 'http://localhost:8000',
       headers: {
@@ -32,9 +33,9 @@ const useUser = (): UseUserReturn => {
       }
     });
     const userAuthToken = await instance.post('/users/auth', data);
-    const authData = userAuthToken.data as User;
+    const authData = userAuthToken.data;
 
-    return authData as User;
+    return authData;
   };
 
   return { userData, setUserData, createUser, loginUser };
