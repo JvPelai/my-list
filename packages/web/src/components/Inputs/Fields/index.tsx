@@ -3,8 +3,12 @@ import TextField from '@material-ui/core/TextField';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import { Button } from '@material-ui/core';
 import { Form, Formik, FormikValues } from 'formik';
+import { useHistory } from 'react-router-dom';
 import useTodoItem from '../../../hooks/useTodoItem';
 
+type TodoFormProps = {
+  onClose: () => void;
+};
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
@@ -16,13 +20,18 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-const TodoItemTextFields: React.FC = () => {
+const TodoItemTextFields: React.FC<TodoFormProps> = ({
+  onClose
+}: TodoFormProps) => {
   const classes = useStyles();
+  const history = useHistory();
   const { createTodoItem } = useTodoItem();
   const handleSubmit = async (values: FormikValues) => {
     const { title, category, description } = values;
     const newItem = await createTodoItem({ title, category, description });
-    console.log(newItem);
+    if (newItem) {
+      onClose();
+    }
   };
 
   return (

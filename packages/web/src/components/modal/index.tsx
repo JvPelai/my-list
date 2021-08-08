@@ -42,12 +42,14 @@ const NewTodoItemModal: React.FC = () => {
   const body = (
     <div style={modalStyle} className={classes.paper}>
       <h2 id="simple-modal-title">New Item</h2>
-      <TodoItemTextFields />
+      <TodoItemTextFields onClose={handleClose} />
     </div>
   );
   return (
     <div>
-      <ActionButton handleClick={handleOpen} />
+      <div className="position-fixed mt-1">
+        <ActionButton handleClick={handleOpen} />
+      </div>
       <Modal
         open={open}
         onClose={handleClose}
