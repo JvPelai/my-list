@@ -41,6 +41,7 @@ const TodoItemTextFields: React.FC<TodoFormProps> = ({
       await createTodoItem({ title, category, description });
       onClose();
     }
+    window.location.reload();
   };
 
   return (

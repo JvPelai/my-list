@@ -10,6 +10,7 @@ class UsersRepositories extends Repository<User> {
     const todoItems = await todoItemsRepository
       .createQueryBuilder('todo_items')
       .where('todo_items.createdById = :id', { id: userId })
+      .orderBy('todo_items.created_at', 'ASC')
       .getMany();
     return todoItems;
   }
