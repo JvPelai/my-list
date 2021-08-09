@@ -3,11 +3,12 @@ import TextField from '@material-ui/core/TextField';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import { Button } from '@material-ui/core';
 import { Form, Formik, FormikValues } from 'formik';
-import { useHistory } from 'react-router-dom';
 import useTodoItem from '../../../hooks/useTodoItem';
+import TodoItem from '../../../interfaces/todoItem';
 
 type TodoFormProps = {
   onClose: () => void;
+  formValues?: TodoItem;
 };
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -21,22 +22,30 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 const TodoItemTextFields: React.FC<TodoFormProps> = ({
-  onClose
+  onClose,
+  formValues
 }: TodoFormProps) => {
   const classes = useStyles();
-  const history = useHistory();
-  const { createTodoItem } = useTodoItem();
+  const { createTodoItem, updateTodoItem } = useTodoItem();
+  const initialValues = formValues || {
+    category: '',
+    title: '',
+    description: ''
+  };
   const handleSubmit = async (values: FormikValues) => {
     const { title, category, description } = values;
-    const newItem = await createTodoItem({ title, category, description });
-    if (newItem) {
+    if (formValues?.id) {
+      await updateTodoItem({ title, category, description }, formValues.id);
+      onClose();
+    } else {
+      await createTodoItem({ title, category, description });
       onClose();
     }
   };
 
   return (
     <Formik
-      initialValues={{ category: '', title: '', description: '' }}
+      initialValues={initialValues}
       onSubmit={async (values) => handleSubmit(values)}
     >
       {({ values, handleChange }) => (
@@ -70,12 +79,20 @@ const TodoItemTextFields: React.FC<TodoFormProps> = ({
             color="primary"
             className="ms-2"
           >
-            Add
+            {initialValues.id ? 'Save' : 'Add'}
           </Button>
         </Form>
       )}
     </Formik>
   );
+};
+
+TodoItemTextFields.defaultProps = {
+  formValues: {
+    category: '',
+    title: '',
+    description: ''
+  }
 };
 
 export { TodoItemTextFields };

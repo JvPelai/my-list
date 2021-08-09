@@ -6,7 +6,8 @@ import User from '../interfaces/user';
 type UseTodoItemReturn = {
   listItemsByUserId: (userId: string) => Promise<TodoItem[] | null>;
   createTodoItem: (data: TodoItem) => Promise<boolean | null>;
-  updateTodoItem: (data: TodoItem, params: any) => Promise<unknown>;
+  updateTodoItem: (data: TodoItem, itemId: number) => Promise<unknown>;
+  deleteTodoItem: (id: number) => Promise<boolean>;
 };
 
 const useTodoItem = (): UseTodoItemReturn => {
@@ -52,9 +53,11 @@ const useTodoItem = (): UseTodoItemReturn => {
 
   const updateTodoItem = async (
     data: TodoItem,
-    params: any
+    itemId: number
   ): Promise<TodoItem> => {
     const authToken = localStorage.getItem('user') as string;
+    const decodedData = decode(authToken);
+    const { userId } = decodedData as User;
     const instance = axios.create({
       baseURL: 'http://localhost:8000',
       headers: {
@@ -62,11 +65,25 @@ const useTodoItem = (): UseTodoItemReturn => {
         authorization: authToken
       }
     });
-    const newItem = await instance.put(`/users/${params.userId}/todo`, data);
+    const newItem = await instance.put(`/users/${userId}/todo/${itemId}`, data);
     return newItem.data;
   };
+  const deleteTodoItem = async (id: number): Promise<boolean> => {
+    const authToken = localStorage.getItem('user') as string;
+    const decodedData = decode(authToken);
+    const { userId } = decodedData as User;
+    const instance = axios.create({
+      baseURL: 'http://localhost:8000',
+      headers: {
+        'Content-Type': 'application/json',
+        authorization: authToken
+      }
+    });
+    await instance.delete(`/users/${userId}/todo/${id}`);
+    return true;
+  };
 
-  return { listItemsByUserId, createTodoItem, updateTodoItem };
+  return { listItemsByUserId, createTodoItem, updateTodoItem, deleteTodoItem };
 };
 
 export default useTodoItem;
