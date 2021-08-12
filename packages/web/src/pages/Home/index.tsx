@@ -4,6 +4,7 @@ import React from 'react';
 import { useHistory } from 'react-router-dom';
 import { TodoList } from '../../components/Data Display/List';
 import { NewTodoItemModal } from '../../components/modal';
+import { UserDropdown } from '../../components/Navigation/Dropdown';
 
 import User from '../../interfaces/user';
 
@@ -49,7 +50,7 @@ const Home: React.FC = () => {
                 </Button>
               </div>
             ) : (
-              <h1>{userName}</h1>
+              <UserDropdown name={userName} />
             )}
           </Toolbar>
         </AppBar>
