@@ -2,7 +2,7 @@ import React from 'react';
 import { Button, Container, TextField, Typography } from '@material-ui/core';
 import { Formik, Form } from 'formik';
 import { useHistory } from 'react-router-dom';
-import { decode } from 'jsonwebtoken';
+
 import {
   ILogin,
   initialValues,
@@ -11,7 +11,6 @@ import {
   registrationSchema
 } from './FormValidation';
 import useUser from '../../../hooks/useUser';
-import User from '../../../interfaces/user';
 
 type FormProps = {
   login: boolean;
@@ -19,7 +18,7 @@ type FormProps = {
 
 const RegisterForm: React.FC<FormProps> = ({ login }: FormProps) => {
   const history = useHistory();
-  const { createUser, loginUser, setUserData } = useUser();
+  const { createUser, loginUser } = useUser();
   const formSchema = login ? loginSchema : registrationSchema;
 
   const submitRegistration = async (values: IRegistration) => {
@@ -34,14 +33,10 @@ const RegisterForm: React.FC<FormProps> = ({ login }: FormProps) => {
 
   const submitLogin = async (values: ILogin) => {
     try {
-      const authData = await loginUser({
+      await loginUser({
         email: values.email,
         password: values.password
       });
-      localStorage.setItem('user', authData);
-      const decodedData = decode(authData);
-      const { name, email, userId } = decodedData as User;
-      setUserData({ name, email, userId } as User);
     } catch (error) {
       console.error(error);
     }

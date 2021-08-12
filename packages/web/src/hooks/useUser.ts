@@ -34,6 +34,7 @@ const useUser = (): UseUserReturn => {
     });
     const userAuthToken = await instance.post('/users/auth', data);
     const authData = userAuthToken.data;
+    localStorage.setItem('user', authData);
 
     return authData;
   };

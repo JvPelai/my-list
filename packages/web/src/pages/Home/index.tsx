@@ -1,22 +1,20 @@
 import { AppBar, Button, Toolbar, Typography } from '@material-ui/core';
-import { decode } from 'jsonwebtoken';
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 import { TodoList } from '../../components/Data Display/List';
 import { NewTodoItemModal } from '../../components/modal';
 import { UserDropdown } from '../../components/Navigation/Dropdown';
-
-import User from '../../interfaces/user';
+import { useAuth } from '../../hooks/useAuth';
 
 const Home: React.FC = () => {
   const history = useHistory();
-  const user = localStorage.getItem('user');
+  const context = useAuth();
+  const { user } = context;
 
-  const decodedData = decode(user as string);
   let userName = '';
   let id = '';
-  if (decodedData) {
-    const { name, userId } = decodedData as User;
+  if (user) {
+    const { name, userId } = user;
     userName = name;
     id = userId;
   }
