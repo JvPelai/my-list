@@ -5,8 +5,8 @@ import cors from 'cors';
 import helmet from 'helmet';
 import './database/index';
 import { router } from './routes';
-dotenv.config({ path: __dirname + '/../.env.file' });
-const port = process.env.PORT;
+dotenv.config();
+
 export const jwtSecretKey = process.env.JWT_SECRET;
 
 const app = express();
@@ -14,6 +14,6 @@ app.use(helmet());
 app.use(cors());
 app.use(express.json());
 app.use(router);
-app.listen(port, () => {
-  console.log(`Server listening on port ${port}`);
+app.listen(8000, () => {
+  console.log(`Server listening on port 8000`);
 });
