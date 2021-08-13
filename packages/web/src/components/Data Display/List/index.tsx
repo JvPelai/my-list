@@ -3,17 +3,16 @@ import TodoItem from '../../../interfaces/todoItem';
 import useTodoItem from '../../../hooks/useTodoItem';
 import { EditTodoItemModal, ConfirmDeleteItemModal } from '../../modal';
 import { formatDate } from '../../../helpers/date';
+import { useAuth } from '../../../hooks/useAuth';
 
-type ListProps = {
-  id: string;
-};
-
-const TodoList: React.FC<ListProps> = ({ id }: ListProps) => {
+const TodoList: React.FC = () => {
   const [userItems, setUserItems] = useState<TodoItem[] | null>([]);
   const { listItemsByUserId } = useTodoItem();
+  const context = useAuth();
+  const { user } = context;
   useEffect(() => {
     const todoList = async () => {
-      const listItems = await listItemsByUserId(id);
+      const listItems = await listItemsByUserId(user?.userId as string);
       setUserItems(listItems);
     };
     todoList();

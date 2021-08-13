@@ -1,7 +1,7 @@
 import axios from 'axios';
-import { decode } from 'jsonwebtoken';
 import TodoItem from '../interfaces/todoItem';
 import User from '../interfaces/user';
+import { useAuth } from './useAuth';
 
 type UseTodoItemReturn = {
   listItemsByUserId: (userId: string) => Promise<TodoItem[] | null>;
@@ -11,10 +11,11 @@ type UseTodoItemReturn = {
 };
 
 const useTodoItem = (): UseTodoItemReturn => {
+  const context = useAuth();
+  const { authToken, user } = context;
   const listItemsByUserId = async (
     userId: string
   ): Promise<TodoItem[] | null> => {
-    const authToken = localStorage.getItem('user') as string;
     const instance = axios.create({
       baseURL: 'http://localhost:8000',
       headers: {
@@ -30,9 +31,7 @@ const useTodoItem = (): UseTodoItemReturn => {
     }
   };
   const createTodoItem = async (data: TodoItem): Promise<boolean | null> => {
-    const authToken = localStorage.getItem('user') as string;
-    const decodedData = decode(authToken);
-    const { userId } = decodedData as User;
+    const { userId } = user as User;
     const instance = axios.create({
       baseURL: 'http://localhost:8000',
       headers: {
@@ -55,9 +54,7 @@ const useTodoItem = (): UseTodoItemReturn => {
     data: TodoItem,
     itemId: number
   ): Promise<TodoItem> => {
-    const authToken = localStorage.getItem('user') as string;
-    const decodedData = decode(authToken);
-    const { userId } = decodedData as User;
+    const { userId } = user as User;
     const instance = axios.create({
       baseURL: 'http://localhost:8000',
       headers: {
@@ -69,9 +66,7 @@ const useTodoItem = (): UseTodoItemReturn => {
     return newItem.data;
   };
   const deleteTodoItem = async (id: number): Promise<boolean> => {
-    const authToken = localStorage.getItem('user') as string;
-    const decodedData = decode(authToken);
-    const { userId } = decodedData as User;
+    const { userId } = user as User;
     const instance = axios.create({
       baseURL: 'http://localhost:8000',
       headers: {

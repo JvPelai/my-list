@@ -1,19 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import axios from 'axios';
-import { Dispatch, SetStateAction, useState } from 'react';
-import User from '../interfaces/user';
+
 import { IRegistration } from '../pages/Form/Register/FormValidation';
 
 type UseUserReturn = {
-  userData: null | User;
-  setUserData: Dispatch<SetStateAction<User | null>>;
   createUser: (data: IRegistration) => Promise<unknown>;
   loginUser: (data: any) => Promise<string | any>;
 };
 
 const useUser = (): UseUserReturn => {
-  const [userData, setUserData] = useState<null | User>(null);
-
   const createUser = async (data: any): Promise<unknown> => {
     const instance = axios.create({
       baseURL: 'http://localhost:8000',
@@ -34,12 +29,11 @@ const useUser = (): UseUserReturn => {
     });
     const userAuthToken = await instance.post('/users/auth', data);
     const authData = userAuthToken.data;
-    localStorage.setItem('user', authData);
 
     return authData;
   };
 
-  return { userData, setUserData, createUser, loginUser };
+  return { createUser, loginUser };
 };
 
 export default useUser;

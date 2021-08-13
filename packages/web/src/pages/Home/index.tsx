@@ -9,15 +9,6 @@ import { useAuth } from '../../hooks/useAuth';
 const Home: React.FC = () => {
   const history = useHistory();
   const context = useAuth();
-  const { user } = context;
-
-  let userName = '';
-  let id = '';
-  if (user) {
-    const { name, userId } = user;
-    userName = name;
-    id = userId;
-  }
 
   return (
     <>
@@ -27,7 +18,7 @@ const Home: React.FC = () => {
             <Typography variant="h6" className="flex-grow-1">
               MyList
             </Typography>
-            {!user ? (
+            {!context.signed ? (
               <div>
                 <Button
                   onClick={() => history.push('/login')}
@@ -48,7 +39,7 @@ const Home: React.FC = () => {
                 </Button>
               </div>
             ) : (
-              <UserDropdown name={userName} />
+              <UserDropdown name={context.user?.name as string} />
             )}
           </Toolbar>
         </AppBar>
@@ -56,7 +47,7 @@ const Home: React.FC = () => {
       </div>
       <div className="d-flex flex-direction-column justify-content-start align-items-start mt-5">
         <NewTodoItemModal />
-        <TodoList id={id} />
+        {context.user?.userId && <TodoList />}
       </div>
     </>
   );

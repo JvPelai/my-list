@@ -21,28 +21,32 @@ const RegisterForm: React.FC<FormProps> = ({ login }: FormProps) => {
   const { createUser, loginUser } = useUser();
   const formSchema = login ? loginSchema : registrationSchema;
 
-  const submitRegistration = async (values: IRegistration) => {
+  const submitLogin = async (values: ILogin) => {
     try {
-      await createUser(values);
-
+      const authData = await loginUser({
+        email: values.email,
+        password: values.password
+      });
+      localStorage.setItem('user', authData as string);
       history.push('/');
+      window.location.reload();
     } catch (error) {
       console.log(error);
     }
   };
-
-  const submitLogin = async (values: ILogin) => {
+  const submitRegistration = async (values: IRegistration) => {
     try {
-      await loginUser({
-        email: values.email,
-        password: values.password
-      });
+      const user = await createUser(values);
+      if (user) {
+        const { email, password } = values;
+        await submitLogin({ email, password } as ILogin);
+      }
     } catch (error) {
-      console.error(error);
+      console.log(error);
     }
-
     history.push('/');
   };
+
   const submitForm = login ? submitLogin : submitRegistration;
 
   return (
