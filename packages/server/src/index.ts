@@ -5,7 +5,7 @@ import cors from 'cors';
 import helmet from 'helmet';
 import './database/index';
 import { router } from './routes';
-dotenv.config();
+dotenv.config({ path: __dirname + '/../.env.file' });
 const port = process.env.PORT;
 export const jwtSecretKey = process.env.JWT_SECRET;
 

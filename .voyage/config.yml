@@ -1,0 +1,23 @@
+services:
+  app:
+    build: ./
+    primary: true
+    exposePort: 3000
+    environment:
+      - name: APP_ENV
+        value: "voyage"
+      - name: NODE_ENV
+        value: "production"
+      - name: JWT_SECRET
+        value: "${JWT_SECRET}"
+      - name: DB_HOST
+        value: 127.0.0.1
+  database:
+    image: postgres:13
+    environment:
+      - name: POSTGRES_USER
+        value: "${POSTGRES_USER}"
+      - name: POSTGRES_PASSWORD
+        value: "${POSTGRES_PASSWORD}"
+      - name: POSTGRES_DB
+        value: "${POSTGRES_DB}"
