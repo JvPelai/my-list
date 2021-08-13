@@ -7,7 +7,8 @@
     "dev": "ts-node-dev src/index.ts",
     "start": "ts-node src/index.ts",
     "create-migration": "ts-node ../../node_modules/typeorm/cli.js migration:create --config src/config/ormconfig.ts",
-    "build": "tsc"
+    "build": "tsc",
+    "start:production": "node dist/index.js"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.2",

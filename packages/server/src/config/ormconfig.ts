@@ -2,14 +2,13 @@ import { ConnectionOptions } from 'typeorm';
 
 export default {
   type: 'postgres',
-  host: 'localhost',
+  host: 'database',
   port: 5432,
   username: 'postgres',
   password: 'root',
   database: 'test',
-  synchronize: false,
+  synchronize: true,
   logging: ['error', 'query', 'schema'],
-  dropSchema: false,
   entities: [__dirname + '/../entities/**/*.ts'],
   migrations: [__dirname + '/../database/migrations/**/*.{t,j}s'],
   subscribers: [__dirname + '/../subscribers/**/*.ts'],

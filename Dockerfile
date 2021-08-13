@@ -1,22 +1,27 @@
 FROM node:lts-fermium
 
+ENV DOCKERIZE_VERSION v0.6.1
+
+RUN wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-alpine-linux-amd64-$DOCKERIZE_VERSION.tar.gz \
+  && tar -C /usr/local/bin -xzvf dockerize-alpine-linux-amd64-$DOCKERIZE_VERSION.tar.gz \
+  && rm dockerize-alpine-linux-amd64-$DOCKERIZE_VERSION.tar.gz
 
 WORKDIR /app
-RUN yarn global add typescript
 
-COPY package*.json ./
-RUN yarn
+COPY package.json ./
+RUN yarn install
 
-COPY packages/web/package*.json packages/web/
-RUN cd packages/web && yarn
-COPY packages/web packages/web
+COPY packages/web/package.json packages/web/
+RUN cd packages/web/ && yarn install
+COPY packages/web/ packages/web/
 RUN yarn build-web
 
-COPY packages/server/package*.json packages/server/
-RUN cd packages/server && yarn
+COPY packages/server/package.json packages/server/
+RUN cd packages/server/ && yarn install
 COPY packages/server/ packages/server/
-RUN yarn build-server
 
 EXPOSE 8000
 
-ENTRYPOINT [ "yarn", "start" ]
+WORKDIR /app/packages/server
+
+ENTRYPOINT [ "yarn", "dev" ]
