@@ -10,7 +10,7 @@ import {
   loginSchema,
   registrationSchema
 } from './FormValidation';
-import useUser from '../../../hooks/useUser';
+import { useAuth } from '../../../hooks/useAuth';
 
 type FormProps = {
   login: boolean;
@@ -18,16 +18,16 @@ type FormProps = {
 
 const RegisterForm: React.FC<FormProps> = ({ login }: FormProps) => {
   const history = useHistory();
-  const { createUser, loginUser } = useUser();
+  const { createUser, loginUser } = useAuth();
   const formSchema = login ? loginSchema : registrationSchema;
 
   const submitLogin = async (values: ILogin) => {
     try {
-      const authData = await loginUser({
+      await loginUser({
         email: values.email,
         password: values.password
       });
-      localStorage.setItem('user', authData as string);
+
       history.push('/');
       window.location.reload();
     } catch (error) {
@@ -44,7 +44,6 @@ const RegisterForm: React.FC<FormProps> = ({ login }: FormProps) => {
     } catch (error) {
       console.log(error);
     }
-    history.push('/');
   };
 
   const submitForm = login ? submitLogin : submitRegistration;

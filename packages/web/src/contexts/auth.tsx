@@ -1,19 +1,21 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import axios from 'axios';
 import { decode } from 'jsonwebtoken';
 import React, { createContext, useEffect, useState } from 'react';
 
 import User from '../interfaces/user';
+import { IRegistration } from '../pages/Form/Register/FormValidation';
 
 export type IAuthContext = {
   signed: boolean;
   user: User | null;
-  authToken?: string | null;
-  logout?: () => void;
+  createUser: (data: IRegistration) => Promise<unknown>;
+  loginUser: (data: any) => Promise<string | any>;
+  authToken: string | null;
+  logout: () => void;
 };
 
-const AuthContext = createContext<IAuthContext>({
-  signed: false,
-  user: null
-});
+const AuthContext = createContext<IAuthContext>({} as IAuthContext);
 
 // eslint-disable-next-line react/prop-types
 export const AuthProvider: React.FC = ({ children }) => {
@@ -28,9 +30,34 @@ export const AuthProvider: React.FC = ({ children }) => {
       setUserData(decodedData);
     }
   }, []);
+
+  const createUser = async (data: any): Promise<unknown> => {
+    const instance = axios.create({
+      baseURL: 'http://localhost:8000',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+    const user = await instance.post('/users', data);
+    return user.data;
+  };
+
+  const loginUser = async (data: any): Promise<string | null> => {
+    const instance = axios.create({
+      baseURL: 'http://localhost:8000',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+    const userAuthToken = await instance.post('/users/auth', data);
+    const authData = userAuthToken.data;
+    setUserData(authData);
+    localStorage.setItem('user', authData as string);
+
+    return authData;
+  };
   const logout = () => {
-    localStorage.removeItem('user');
-    window.location.reload();
+    setUserData(null);
   };
 
   return (
@@ -39,6 +66,8 @@ export const AuthProvider: React.FC = ({ children }) => {
         signed: Boolean(userData),
         user: userData,
         authToken: token,
+        createUser,
+        loginUser,
         logout
       }}
     >
