@@ -14,14 +14,14 @@ RUN yarn install
 COPY packages/web/package.json packages/web/
 RUN cd packages/web/ && yarn install
 COPY packages/web/ packages/web/
-RUN yarn build-web
 
 COPY packages/server/package.json packages/server/
 RUN cd packages/server/ && yarn install
 COPY packages/server/ packages/server/
 
 EXPOSE 8000
+EXPOSE 3000
 
-WORKDIR /app/packages/server
+WORKDIR /app
 
-ENTRYPOINT [ "yarn", "dev" ]
+ENTRYPOINT [ "yarn", "start" ]

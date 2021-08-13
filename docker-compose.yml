@@ -10,6 +10,11 @@ services:
     environment:
       - PORT=8000
       - JWT_SECRET=2DBB932B851829D796E248FB54B92
+  web:
+    build: .
+    container_name: web
+    ports:
+      - "3000:3000"
   database:
     image: postgres:13
     container_name: database
