@@ -5,6 +5,9 @@
     "allowJs": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
+    "outDir": "build",
+    "rootDir": "src",
+    "baseUrl": "./",
     "allowSyntheticDefaultImports": true,
     "strict": true,
     "forceConsistentCasingInFileNames": true,
@@ -16,5 +19,5 @@
     "noEmit": true,
     "jsx": "react-jsx"
   },
-  "include": ["src", "src/@types/custom.d.ts", ".eslintrc.json"]
+  "include": ["src/*", "src/@types/custom.d.ts"],
 }
