@@ -24,8 +24,11 @@ export const AuthProvider: React.FC = ({ children }) => {
   useEffect(() => {
     const authToken = localStorage.getItem('user') as string;
     const decodedData = decode(authToken) as User;
+    const { exp } = decodedData;
+    const currentTime = Date.now() / 1000;
+    const isExpired = (exp as number) < currentTime;
 
-    if (authToken && decodedData) {
+    if (authToken && decodedData && !isExpired) {
       setToken(authToken);
       setUserData(decodedData);
     }

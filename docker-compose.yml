@@ -7,9 +7,8 @@ services:
       - "database"
     ports:
       - "8000:8000"
-    environment:
-      - PORT=8000
-      - JWT_SECRET=2DBB932B851829D796E248FB54B92
+    env_file:
+      - ./packages/server/.env
   web:
     build: .
     container_name: web

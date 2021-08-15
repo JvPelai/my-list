@@ -19,9 +19,6 @@ COPY packages/server/package.json packages/server/
 RUN cd packages/server/ && yarn install
 COPY packages/server/ packages/server/
 
-EXPOSE 8000
-EXPOSE 3000
-
 WORKDIR /app
 
 ENTRYPOINT [ "yarn", "start" ]
