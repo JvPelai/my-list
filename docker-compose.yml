@@ -2,6 +2,7 @@ version: "3.7"
 services:
   server:
     build: .
+    image: jvpelai/my-list:latest
     container_name: server
     depends_on:
       - database
@@ -18,8 +19,12 @@ services:
       POSTGRES_PASSWORD: root
       POSTGRES_DB: test
     volumes:
-      - dbData:/var/lib/postgresql/data
+      - postgres-data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
 volumes:
-  dbData:
+  postgres-data:
+    driver: azure_file
+    driver_opts:
+      share_name: postgres-share-data
+      storage_account_name: mylistdockerstorage
