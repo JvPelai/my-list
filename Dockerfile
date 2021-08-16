@@ -14,11 +14,15 @@ RUN yarn install
 COPY packages/web/package.json packages/web/
 RUN cd packages/web/ && yarn install
 COPY packages/web/ packages/web/
+RUN cd packages/web && yarn build
 
 COPY packages/server/package.json packages/server/
 RUN cd packages/server/ && yarn install
 COPY packages/server/ packages/server/
+RUN cd packages/server && yarn build
 
-WORKDIR /app
+EXPOSE 8000
 
-ENTRYPOINT [ "yarn", "start" ]
+WORKDIR /app/packages/server
+
+ENTRYPOINT [ "yarn", "start:production" ]
