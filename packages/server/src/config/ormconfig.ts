@@ -9,9 +9,9 @@ export default {
   database: 'test',
   synchronize: true,
   logging: ['error', 'query', 'schema'],
-  entities: [__dirname + '/../entities/**/*.ts'],
+  entities: [__dirname + '/../entities/**/*.{t,j}s'],
   migrations: [__dirname + '/../database/migrations/**/*.{t,j}s'],
-  subscribers: [__dirname + '/../subscribers/**/*.ts'],
+  subscribers: [__dirname + '/../subscribers/**/*.{t,j}s'],
   cli: {
     entitiesDir: __dirname + '/../entities',
     migrationsDir: __dirname + '/../database/migrations',
